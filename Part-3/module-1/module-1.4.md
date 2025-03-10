@@ -1,34 +1,35 @@
-# Deployment Stages and Cadence
+# Build and Release Tasks
 
-## Deployment Stages
-Deployment stages (e.g., Dev, QA, Production) require careful planning to ensure smooth and efficient software releases.
+## Overview
+Tasks are units of executable code used to perform specific actions in a build or release pipeline. They define the steps for building, testing, packaging, and deploying applications.
 
-## Deployment Cadence
-Cadence defines how often you deploy to each stage, balancing frequent updates with system stability and user experience.
+## Build Tasks
+Build tasks are used to specify actions such as:
+- Building the application.
+- Running tests.
+- Packaging the application.
 
-### Key Questions to Consider:
-- Do we want to deploy the application?
-- How often should we deploy to each stage?
-- Is the stage currently in use (e.g., testers using QA)?
-- Will deployment cause downtime or affect users?
+These steps can include utilities, scripts, and deployment tasks to automate the build process.
 
-## Examples of Deployment Cadence
-- **Development Stage**: Frequent deployments (e.g., continuous deployment).
-- **QA/Production Stages**: Less frequent deployments (e.g., nightly) to avoid disrupting testers or users.
+## Release Tasks
+Release tasks are used to deploy the application to various environments (e.g., Dev, QA, Production). These tasks can include:
+- Configuration settings.
+- Validation steps.
+- Post-deployment checks.
 
-## Factors to Consider When Designing a Release Strategy
-- **Target Environment**: Who uses it (single team vs. multiple teams)?
-- **User Needs**: Do users want frequent updates?
-- **Deployment Time**: How long does it take to deploy?
-- **Downtime and Performance**: Will users be affected by downtime or performance issues?
-
-## Key Takeaways
-- Plan deployment frequency based on stage usage and user impact.
-- Use continuous deployment for development stages.
-- Be cautious with deployments to QA and production to avoid disruptions.
-- Consider downtime, performance, and user needs when designing your release strategy.
+## Custom and Community Tasks
+If a required task isn’t available out-of-the-box, you can:
+- Use community-contributed tasks from marketplaces (e.g., Jenkins, Azure DevOps, Atlassian).
+- Create custom tasks to meet specific needs.
 
 ## Key Points to Remember
-- Deployment cadence varies by stage.
-- Avoid deploying during active testing or peak usage times.
-- Balance frequent updates with user experience and system stability.
+- Tasks automate repeatable actions in build and release pipelines.
+- Build tasks focus on compiling, testing, and packaging applications.
+- Release tasks focus on deployment and post-deployment activities.
+- Marketplaces offer additional tasks for extended functionality.
+
+## Key Takeaways
+- Tasks are essential for automating build and release processes.
+- Use pre-built or community tasks to save time and effort.
+- Custom tasks can be created for unique requirements.
+
