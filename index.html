@@ -6,67 +6,65 @@
     <title>AZ-400 Documentation</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <style>
-        body { 
-            font-family: 'Arial', sans-serif; 
-            margin: 20px; 
-            background-color: #f4f4f4; 
-            transition: background 0.5s, color 0.5s;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
         }
-        h1 { text-align: center; color: #333; }
-        ul { list-style-type: none; padding: 0; }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
         li {
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 5px;
+            margin: 8px 0;
             cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s ease-in-out;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background 0.3s, transform 0.2s;
         }
-        li:hover { background: rgba(0, 140, 255, 0.2); }
-        li strong { color: #007bff; }
+        li:hover {
+            background: rgba(0, 86, 179, 0.1);
+            transform: scale(1.02);
+        }
+        li strong {
+            color: #d9534f; /* Red for folders */
+        }
+        li.file {
+            color: #5cb85c; /* Green for files */
+        }
         #content {
-            border: 1px solid #ccc;
-            padding: 20px;
+            border: 2px solid #0056b3;
+            padding: 15px;
             margin-top: 20px;
             background: white;
             display: none;
-            border-radius: 5px;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        button {
-            display: block;
-            margin: 10px auto;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            background: #007bff;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s ease;
-        }
-        button:hover { background: #0056b3; }
-        .dark-mode { background: #121212; color: white; }
-        .dark-mode #content { background: #222; color: white; border-color: #444; }
-        .dark-mode li:hover { background: rgba(0, 255, 127, 0.2); }
-        .dark-mode li strong { color: #0fd976; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
-    <h1>📘 AZ-400 Documentation</h1>
-    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    <h1>📖 AZ-400 Documentation</h1>
     <ul id="file-list"></ul>
     <div id="content"></div>
 
     <script>
-        const repoOwner = "Mahendarmax";  // Change this to your GitHub username
-        const repoName = "AZ-400";        // Change this to your repository name
-        const branch = "develop";         // Change this to gh-pages or main if needed
+        const repoOwner = "Mahendarmax";
+        const repoName = "AZ-400";
+        const branch = "develop";
+
+        const renderedPaths = new Set(); // Avoid duplicate folders
 
         async function fetchRepoContent(path = "") {
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}?ref=${branch}`;
@@ -81,22 +79,22 @@
         }
 
         async function renderFileList(path = "", parentElement = document.getElementById("file-list")) {
+            if (renderedPaths.has(path)) return;
+            renderedPaths.add(path);
+
             const files = await fetchRepoContent(path);
             if (!Array.isArray(files)) return;
 
             const ul = document.createElement("ul");
             files.forEach(item => {
+                if (item.name === ".github") return; // Exclude .github folder
+                
                 const li = document.createElement("li");
+                li.classList.add(item.type === "dir" ? "folder" : "file");
 
                 if (item.type === "dir") {
                     li.innerHTML = `<strong>📁 ${item.name}</strong>`;
-                    li.addEventListener("click", () => {
-                        if (li.querySelector("ul")) {
-                            li.querySelector("ul").remove();
-                        } else {
-                            renderFileList(item.path, li);
-                        }
-                    });
+                    li.addEventListener("click", () => renderFileList(item.path, li));
                 } else {
                     li.innerHTML = `📄 ${item.name}`;
                     li.addEventListener("click", () => loadFileContent(item.path));
@@ -115,12 +113,18 @@
 
                 const contentDiv = document.getElementById("content");
                 contentDiv.style.display = "block";
+                contentDiv.style.opacity = "0";
+                contentDiv.style.transform = "translateY(20px)";
 
-                if (filePath.endsWith(".md")) {
-                    contentDiv.innerHTML = marked.parse(content);
-                } else {
-                    contentDiv.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
-                }
+                setTimeout(() => {
+                    if (filePath.endsWith(".md")) {
+                        contentDiv.innerHTML = marked.parse(content);
+                    } else {
+                        contentDiv.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
+                    }
+                    contentDiv.style.opacity = "1";
+                    contentDiv.style.transform = "translateY(0)";
+                }, 100);
             } catch (error) {
                 console.error("Error loading file content:", error);
             }
@@ -128,10 +132,6 @@
 
         function escapeHtml(text) {
             return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
         }
 
         renderFileList();
