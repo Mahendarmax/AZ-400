@@ -9,12 +9,12 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #e3eaf2;
+            color: #222;
             transition: background 0.3s, color 0.3s;
         }
         h1 {
-            color: #0056b3;
+            color: #003366;
             text-align: center;
         }
         ul {
@@ -24,28 +24,30 @@
         li {
             margin: 8px 0;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 5px;
+            padding: 10px;
+            border-radius: 8px;
             transition: background 0.3s, transform 0.2s;
+            background: #ffffff;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
         }
         li:hover {
-            background: rgba(0, 86, 179, 0.1);
+            background: #dbe6f2;
             transform: scale(1.02);
         }
         li strong {
-            color: #d9534f; /* Red for folders */
+            color: #d9534f;
         }
         li.file {
-            color: #5cb85c; /* Green for files */
+            color: #28a745;
         }
         #content {
-            border: 2px solid #0056b3;
+            border: 2px solid #003366;
             padding: 15px;
             margin-top: 20px;
             background: white;
             display: none;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             max-width: 80%;
             margin-left: auto;
             margin-right: auto;
@@ -54,35 +56,41 @@
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
         .dark-mode {
-            background-color: #121212;
-            color: #f4f4f4;
+            background-color: #1c1c1c;
+            color: #e3e3e3;
         }
         .dark-mode #content {
-            background: #1e1e1e;
-            color: #f4f4f4;
-            border-color: #00bfff;
+            background: #2a2a2a;
+            color: #e3e3e3;
+            border-color: #0099ff;
         }
         .dark-mode h1 {
-            color: #00bfff;
+            color: #0099ff;
+        }
+        .dark-mode li {
+            background: #333;
+            color: #fff;
         }
         .dark-mode li:hover {
-            background: rgba(0, 191, 255, 0.2);
+            background: #444;
         }
         .toggle-container {
             text-align: center;
             margin-bottom: 20px;
         }
         .toggle-button {
-            background-color: #0056b3;
+            background-color: #003366;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background 0.3s;
+            border-radius: 8px;
+            transition: background 0.3s, transform 0.2s;
+            font-size: 16px;
         }
         .toggle-button:hover {
-            background-color: #004494;
+            background-color: #002244;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -98,7 +106,7 @@
         const repoOwner = "Mahendarmax";
         const repoName = "AZ-400";
         const branch = "develop";
-        const renderedPaths = new Set(); // Avoid duplicate folders
+        const renderedPaths = new Set();
 
         async function fetchRepoContent(path = "") {
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}?ref=${branch}`;
@@ -121,7 +129,7 @@
 
             const ul = document.createElement("ul");
             files.forEach(item => {
-                if (item.name === ".github" || item.name === "index.html") return; // Exclude .github and index.html
+                if (item.name === ".github" || item.name === "index.html") return;
                 
                 const li = document.createElement("li");
                 li.classList.add(item.type === "dir" ? "folder" : "file");
