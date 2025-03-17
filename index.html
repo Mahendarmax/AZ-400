@@ -11,6 +11,7 @@
             margin: 20px;
             background-color: #f4f4f4;
             color: #333;
+            transition: background 0.3s, color 0.3s;
         }
         h1 {
             color: #0056b3;
@@ -52,10 +53,44 @@
             transform: translateY(20px);
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
+        .dark-mode {
+            background-color: #121212;
+            color: #f4f4f4;
+        }
+        .dark-mode #content {
+            background: #1e1e1e;
+            color: #f4f4f4;
+            border-color: #00bfff;
+        }
+        .dark-mode h1 {
+            color: #00bfff;
+        }
+        .dark-mode li:hover {
+            background: rgba(0, 191, 255, 0.2);
+        }
+        .toggle-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .toggle-button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .toggle-button:hover {
+            background-color: #004494;
+        }
     </style>
 </head>
 <body>
     <h1>📖 AZ-400 Documentation</h1>
+    <div class="toggle-container">
+        <button class="toggle-button" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    </div>
     <ul id="file-list"></ul>
     <div id="content"></div>
 
@@ -63,7 +98,6 @@
         const repoOwner = "Mahendarmax";
         const repoName = "AZ-400";
         const branch = "develop";
-
         const renderedPaths = new Set(); // Avoid duplicate folders
 
         async function fetchRepoContent(path = "") {
@@ -87,7 +121,7 @@
 
             const ul = document.createElement("ul");
             files.forEach(item => {
-                if (item.name === ".github") return; // Exclude .github folder
+                if (item.name === ".github" || item.name === "index.html") return; // Exclude .github and index.html
                 
                 const li = document.createElement("li");
                 li.classList.add(item.type === "dir" ? "folder" : "file");
@@ -132,6 +166,10 @@
 
         function escapeHtml(text) {
             return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
         }
 
         renderFileList();
