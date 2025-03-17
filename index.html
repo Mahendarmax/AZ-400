@@ -10,7 +10,14 @@
         ul { list-style-type: none; padding: 0; }
         li { margin: 5px 0; cursor: pointer; }
         li strong { color: blue; }
-        #content { border: 1px solid #ccc; padding: 15px; margin-top: 20px; display: none; }
+        #content {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body>
@@ -19,16 +26,16 @@
     <div id="content"></div>
 
     <script>
-        const repoOwner = "Mahendarmax"; // Change this to your GitHub username
-        const repoName = "AZ-400"; // Change this to your repository name
-        const branch = "develop"; // Change this to gh-pages or main if needed
+        const repoOwner = "Mahendarmax";
+        const repoName = "AZ-400";
+        const branch = "develop";
+        const renderedPaths = new Set();
 
         async function fetchRepoContent(path = "") {
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}?ref=${branch}`;
             try {
                 const response = await fetch(apiUrl);
-                const data = await response.json();
-                return data;
+                return await response.json();
             } catch (error) {
                 console.error("Error fetching repo content:", error);
                 return [];
@@ -36,6 +43,9 @@
         }
 
         async function renderFileList(path = "", parentElement = document.getElementById("file-list")) {
+            if (renderedPaths.has(path)) return;
+            renderedPaths.add(path);
+
             const files = await fetchRepoContent(path);
             if (!Array.isArray(files)) return;
 
@@ -64,6 +74,11 @@
 
                 const contentDiv = document.getElementById("content");
                 contentDiv.style.display = "block";
+                contentDiv.style.opacity = "0";
+
+                setTimeout(() => {
+                    contentDiv.style.opacity = "1";
+                }, 50);
 
                 if (filePath.endsWith(".md")) {
                     contentDiv.innerHTML = marked.parse(content);
