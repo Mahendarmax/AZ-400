@@ -21,7 +21,7 @@
             font-weight: bold;
         }
 
-        /* File & Folder List */
+        /* File List Styling */
         ul {
             list-style-type: none;
             padding: 0;
@@ -49,16 +49,16 @@
             transform: translateX(5px);
         }
 
-        /* File & Folder Colors */
+        /* Folder & File Colors */
         .folder strong {
-            color: #d9534f; /* Red for Folders */
+            color: #d9534f;
         }
 
         .file {
-            color: #2d8659; /* Green for Files */
+            color: #2d8659;
         }
 
-        /* File Content Box */
+        /* Content Box */
         #content {
             max-width: 80%;
             margin: 30px auto;
@@ -73,13 +73,9 @@
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
-        pre {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-            font-size: 14px;
-            color: #333;
+        /* Hide Content Initially */
+        .hidden {
+            display: none;
         }
 
     </style>
@@ -87,14 +83,14 @@
 <body>
     <h1>📘 AZ-400 Documentation</h1>
     <ul id="file-list"></ul>
-    <div id="content"></div>
+    <div id="content" class="hidden"></div>
 
     <script>
         const repoOwner = "Mahendarmax";
         const repoName = "AZ-400";
         const branch = "develop";
 
-        const renderedPaths = new Set(); // Avoid duplicate folders
+        const renderedPaths = new Set();
 
         async function fetchRepoContent(path = "") {
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}?ref=${branch}`;
@@ -142,7 +138,9 @@
                 let content = await response.text();
 
                 const contentDiv = document.getElementById("content");
-                contentDiv.style.display = "block";
+                contentDiv.classList.remove("hidden");
+
+                // Smooth transition effect
                 contentDiv.style.opacity = "0";
                 contentDiv.style.transform = "translateY(20px)";
 
