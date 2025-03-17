@@ -106,7 +106,6 @@
         const repoOwner = "Mahendarmax";
         const repoName = "AZ-400";
         const branch = "develop";
-        const renderedPaths = new Set();
 
         async function fetchRepoContent(path = "") {
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}?ref=${branch}`;
@@ -120,10 +119,15 @@
             }
         }
 
-        async function renderFileList(path = "", parentElement = document.getElementById("file-list")) {
-            if (renderedPaths.has(path)) return;
-            renderedPaths.add(path);
+        function toggleFolder(li) {
+            if (li.querySelector("ul")) {
+                li.removeChild(li.querySelector("ul"));
+            } else {
+                renderFileList(li.dataset.path, li);
+            }
+        }
 
+        async function renderFileList(path = "", parentElement = document.getElementById("file-list")) {
             const files = await fetchRepoContent(path);
             if (!Array.isArray(files)) return;
 
@@ -133,10 +137,14 @@
                 
                 const li = document.createElement("li");
                 li.classList.add(item.type === "dir" ? "folder" : "file");
+                li.dataset.path = item.path;
 
                 if (item.type === "dir") {
                     li.innerHTML = `<strong>📁 ${item.name}</strong>`;
-                    li.addEventListener("click", () => renderFileList(item.path, li));
+                    li.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        toggleFolder(li);
+                    });
                 } else {
                     li.innerHTML = `📄 ${item.name}`;
                     li.addEventListener("click", () => loadFileContent(item.path));
