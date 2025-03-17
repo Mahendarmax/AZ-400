@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZ-400 Documentation</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        ul { list-style-type: none; }
+        li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>AZ-400 Documentation</h1>
+    <ul id="file-list"></ul>
+
+    <script>
+        async function fetchRepoContent() {
+            const repoOwner = "Mahendarmax"; // Change to your GitHub username
+            const repoName = "AZ-400"; // Change to your repository name
+            const branch = "develop"; // Change to your main or gh-pages branch
+
+            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (!Array.isArray(data)) {
+                    console.error("Invalid API response:", data);
+                    return;
+                }
+
+                const fileList = document.getElementById("file-list");
+
+                data.forEach(item => {
+                    const li = document.createElement("li");
+                    if (item.type === "dir") {
+                        li.innerHTML = `<strong>📁 ${item.name}</strong>`;
+                        fetchSubFiles(item.path, li);
+                    } else {
+                        li.innerHTML = `<a href="${item.html_url}" target="_blank">📄 ${item.name}</a>`;
+                    }
+                    fileList.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Error fetching repository content:", error);
+            }
+        }
+
+        async function fetchSubFiles(folderPath, parentElement) {
+            const repoOwner = "Mahendarmax";
+            const repoName = "AZ-400";
+            const branch = "develop";
+
+            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?ref=${branch}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (!Array.isArray(data)) {
+                    console.error("Invalid API response:", data);
+                    return;
+                }
+
+                const ul = document.createElement("ul");
+                data.forEach(item => {
+                    const li = document.createElement("li");
+                    if (item.type === "dir") {
+                        li.innerHTML = `<strong>📁 ${item.name}</strong>`;
+                        fetchSubFiles(item.path, li);
+                    } else {
+                        li.innerHTML = `<a href="${item.html_url}" target="_blank">📄 ${item.name}</a>`;
+                    }
+                    ul.appendChild(li);
+                });
+
+                parentElement.appendChild(ul);
+            } catch (error) {
+                console.error("Error fetching subfolder content:", error);
+            }
+        }
+
+        fetchRepoContent();
+    </script>
+</body>
+</html>
