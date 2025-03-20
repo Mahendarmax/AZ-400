@@ -92,6 +92,10 @@
             background-color: #002244;
             transform: scale(1.05);
         }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -168,6 +172,14 @@
 
                 setTimeout(() => {
                     if (filePath.endsWith(".md")) {
+                        // Resolve relative image paths in Markdown
+                        const baseUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/`;
+                        content = content.replace(/!\[(.*?)\]\((.*?)\)/g, (match, altText, imgPath) => {
+                            if (!imgPath.startsWith("http")) {
+                                imgPath = new URL(imgPath, baseUrl).href;
+                            }
+                            return `![${altText}](${imgPath})`;
+                        });
                         contentDiv.innerHTML = marked.parse(content);
                     } else {
                         contentDiv.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
