@@ -36,4 +36,3 @@ This document provides an overview of Azure Load Testing, a fully managed servic
 - Integrates seamlessly with CI/CD workflows for automated regression testing.
 - Provides detailed metrics to identify and resolve performance bottlenecks.
 
-![alt text](image-3.png)

@@ -46,6 +46,5 @@ This document explains the concept of Shift-Left in software development, focusi
 - Define a clear test taxonomy and focus on fast, reliable tests.
 - Use Shift-Right testing to validate production scenarios.
 
-![alt text](image-1.png)
 
-![alt text](image-2.png)
+

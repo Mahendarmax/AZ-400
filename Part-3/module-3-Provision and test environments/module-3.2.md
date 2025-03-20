@@ -56,4 +56,3 @@ This document provides a summary of configuring automated integration and functi
 - Shift-left testing to catch issues earlier in the development cycle.
 - Integrate test automation into pipelines for efficient execution.
 
-![alt text](image.png)
