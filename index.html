@@ -172,14 +172,17 @@
 
                 setTimeout(() => {
                     if (filePath.endsWith(".md")) {
-                        // Resolve relative image paths in Markdown
+                        // Base URL for resolving relative image paths
                         const baseUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/`;
+
+                        // Fix image paths (handling cases with and without quotes)
                         content = content.replace(/!\[(.*?)\]\((.*?)\)/g, (match, altText, imgPath) => {
-                            if (!imgPath.startsWith("http")) {
+                            if (!imgPath.startsWith("http") && !imgPath.startsWith("/")) {
                                 imgPath = new URL(imgPath, baseUrl).href;
                             }
                             return `![${altText}](${imgPath})`;
                         });
+
                         contentDiv.innerHTML = marked.parse(content);
                     } else {
                         contentDiv.innerHTML = `<pre>${escapeHtml(content)}</pre>`;
